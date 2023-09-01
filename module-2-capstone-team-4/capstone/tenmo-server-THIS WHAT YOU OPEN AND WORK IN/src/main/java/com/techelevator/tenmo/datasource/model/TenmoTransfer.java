@@ -3,10 +3,12 @@ package com.techelevator.tenmo.datasource.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class TenmoTransfer {
+
 
     // data base stores numeric value:    0  ,    1,       2,        3
     public static enum TRANSFER_STATUS {NONE, PENDING, APPROVED, REJECTED}
@@ -18,6 +20,7 @@ public class TenmoTransfer {
     private TenmoAccount fromTenmoAccount;
     private TenmoAccount toTenmoAccount;
     private BigDecimal      amount;
+    private Timestamp       create;
 
     public TenmoTransfer(){}  // default constructor in case Java needs it
 
@@ -37,6 +40,15 @@ public class TenmoTransfer {
         this.fromTenmoAccount = aTransfer.getFromTenmoAccount();
         this.toTenmoAccount   = aTransfer.getToTenmoAccount();
         this.amount           = aTransfer.getAmount();
+    }
+
+
+    public Timestamp getCreate() {
+        return create;
+    }
+
+    public void setCreate(Timestamp create) {
+        this.create = create;
     }
 
     public Long  getTransferId() {
