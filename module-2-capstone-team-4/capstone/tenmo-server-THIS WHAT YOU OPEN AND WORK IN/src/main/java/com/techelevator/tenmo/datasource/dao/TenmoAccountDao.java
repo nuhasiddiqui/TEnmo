@@ -3,6 +3,7 @@ package com.techelevator.tenmo.datasource.dao;
 import com.techelevator.tenmo.datasource.model.TenmoAccount;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface TenmoAccountDao {
@@ -17,5 +18,6 @@ public interface TenmoAccountDao {
 
     public TenmoAccount updateAccount(TenmoAccount tenmoAccount2Update);
 
+    public BigDecimal getBalanceByAccountId(int AccountId);
 
 }
