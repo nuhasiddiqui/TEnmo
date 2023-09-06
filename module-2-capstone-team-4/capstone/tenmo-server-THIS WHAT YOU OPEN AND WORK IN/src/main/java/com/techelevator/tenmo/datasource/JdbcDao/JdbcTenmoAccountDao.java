@@ -2,6 +2,9 @@ package com.techelevator.tenmo.datasource.JdbcDao;
 
 import com.techelevator.tenmo.datasource.dao.TenmoAccountDao;
 import com.techelevator.tenmo.datasource.model.TenmoAccount;
+import com.techelevator.tenmo.exception.DaoException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -34,12 +37,17 @@ public class JdbcTenmoAccountDao implements TenmoAccountDao {
         // Define the SQL query to select all rows from the 'account' table
         String sql = "SELECT * FROM account;";
 
-        // Execute the query and retrieve the results as a SqlRowSet
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
-        // Iterate over the results and map each row to a TenmoAccount object
-        while (results.next()) {
-            tenmoAccounts.add(mapRowToTenmoAccount(results));
+        try {
+            // Execute the query and retrieve the results as a SqlRowSet
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+            // Iterate over the results and map each row to a TenmoAccount object
+            while (results.next()) {
+                tenmoAccounts.add(mapRowToTenmoAccount(results));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
         }
+
         // Return the list of TenmoAccount objects
         return tenmoAccounts;
     }
@@ -52,12 +60,17 @@ public class JdbcTenmoAccountDao implements TenmoAccountDao {
         List<TenmoAccount> userAccounts = new ArrayList<>();
         String sql = "SELECT * FROM account WHERE user_id = ?";
 
-        // Execute the query and retrieve the account data
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, theUserId);
-        while (results.next()) {
-            TenmoAccount account = mapRowToTenmoAccount(results);
-            userAccounts.add(account);
+        try {
+            // Execute the query and retrieve the account data
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, theUserId);
+            while (results.next()) {
+                TenmoAccount account = mapRowToTenmoAccount(results);
+                userAccounts.add(account);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
         }
+
         return userAccounts;
     }
 
@@ -66,17 +79,22 @@ public class JdbcTenmoAccountDao implements TenmoAccountDao {
 
         // TODONE: Given an account id, write a method to get a specific account from the data source
         // Construct the SQL query to select the account with the provided account ID
+        TenmoAccount tenmoAccount = null;
         String sql = "SELECT * FROM account WHERE account_id = ?";
 
-        // Execute the query and retrieve the account data
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, theAccountId);
-        // Check if the result contains date
-        if (result.next()) {
-            // Map the row data to a TenmoAccount object
-            return mapRowToTenmoAccount(result);
-        } else {
-            return null;
+        try {
+            // Execute the query and retrieve the account data
+            SqlRowSet result = jdbcTemplate.queryForRowSet(sql, theAccountId);
+            // Check if the result contains date
+            if (result.next()) {
+                // Map the row data to a TenmoAccount object
+                tenmoAccount = mapRowToTenmoAccount(result);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
         }
+
+        return tenmoAccount;
     }
 
 
@@ -87,9 +105,16 @@ public class JdbcTenmoAccountDao implements TenmoAccountDao {
         TenmoAccount newAccount = null;
         String sql = "INSERT INTO account (account_id, user_id, balance) " +
                      "VALUES (?, ?, ?) RETURNING account_id;";
-        int newAccountId = jdbcTemplate.queryForObject(sql, int.class,
-                tenmoAccount2Save.getAccount_id(), tenmoAccount2Save.getUser_id(), tenmoAccount2Save.getBalance());
-        newAccount = getAccountForAccountId((long)newAccountId);
+        try {
+            int newAccountId = jdbcTemplate.queryForObject(sql, int.class,
+                    tenmoAccount2Save.getAccount_id(), tenmoAccount2Save.getUser_id(), tenmoAccount2Save.getBalance());
+            newAccount = getAccountForAccountId((long) newAccountId);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+
         return newAccount;
     }
 
@@ -100,11 +125,19 @@ public class JdbcTenmoAccountDao implements TenmoAccountDao {
         TenmoAccount updatedAccount = null;
         String sql = "UPDATE account SET account_id = ?, user_id = ?, balance = ? " +
                      "WHERE account_id = ?";
-        int numberOfRows = jdbcTemplate.update(sql, tenmoAccount2Update.getAccount_id(),
-                tenmoAccount2Update.getUser_id(), tenmoAccount2Update.getBalance());
-        if (numberOfRows > 0) {
-            updatedAccount = getAccountForAccountId(tenmoAccount2Update.getAccount_id());
+        try {
+            int numberOfRows = jdbcTemplate.update(sql, tenmoAccount2Update.getUser_id(), tenmoAccount2Update.getBalance(), tenmoAccount2Update.getAccount_id());
+            if (numberOfRows == 0) {
+                throw new DaoException("Zero rows affected, expected at least one");
+            } else {
+                updatedAccount = getAccountForAccountId(tenmoAccount2Update.getAccount_id());
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
         }
+
         return updatedAccount;
     }
 
@@ -115,11 +148,16 @@ public class JdbcTenmoAccountDao implements TenmoAccountDao {
         BigDecimal balance = new BigDecimal("0");
         String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?;";
 
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, AccountId);
-        if (results.next()) {
-            account = mapRowToTenmoAccount(results);
-            balance = account.getBalance();
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, AccountId);
+            if (results.next()) {
+                account = mapRowToTenmoAccount(results);
+                balance = account.getBalance();
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
         }
+
         return balance;
     }
 
@@ -128,9 +166,7 @@ public class JdbcTenmoAccountDao implements TenmoAccountDao {
         tenmoAccount.setAccount_id((long)results.getInt("account_id"));
         tenmoAccount.setUser_id(results.getInt("user_id"));
         tenmoAccount.setBalance(results.getBigDecimal("balance"));
-        // set created_at
         return tenmoAccount;
-
     }
 
 }

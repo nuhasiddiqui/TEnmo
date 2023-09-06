@@ -59,7 +59,7 @@ public class JdbcTenmoUserDao implements TenmoUserDao {
         int user_id = results.getInt("user_id");
         String username = results.getString("username");
         String password_hash = results.getString("password_hash");
-        String role = results.getString("password_hash");
+        String role = results.getString("role");
         Timestamp created_at = results.getTimestamp("created_at");
 
         return new TenmoUser(user_id, username, password_hash, role, created_at);

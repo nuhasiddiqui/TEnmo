@@ -37,8 +37,7 @@ public class JdbcTenmoTransferDao implements TenmoTransferDao {
                 aTransfer.getFromTenmoAccount(), aTransfer.getToTenmoAccount(), aTransfer.getAmount());
 
         // Fetch the saved transfer details based o nthe generated transfer ID
-        TenmoTransfer savedTransfer = getATransferById(newTransferID);
-        return savedTransfer;
+        return getATransferById(newTransferID);
     }
 
     @Override
