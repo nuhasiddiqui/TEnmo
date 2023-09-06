@@ -1,10 +1,16 @@
 package com.techelevator.tenmo.datasource.model;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.sql.Timestamp;
 
 public class TenmoUser {
+    @Positive (message = "User ID cannot be negative.")
     private int user_id;
+    @NotBlank(message = "Username cannot be blank.")
     private String username;
+    @NotBlank(message = "Password cannot be blank.")
     private String password_hash;
+    @NotBlank(message = "Role cannot be blank.")
     private String role;
     private Timestamp created_at;
 
@@ -54,5 +60,16 @@ public class TenmoUser {
 
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
+    }
+
+    @Override
+    public String toString() {
+        return "TenmoUser{" +
+                "user_id=" + user_id +
+                ", username='" + username + '\'' +
+                ", password_hash='" + password_hash + '\'' +
+                ", role='" + role + '\'' +
+                ", created_at=" + created_at +
+                '}';
     }
 }
