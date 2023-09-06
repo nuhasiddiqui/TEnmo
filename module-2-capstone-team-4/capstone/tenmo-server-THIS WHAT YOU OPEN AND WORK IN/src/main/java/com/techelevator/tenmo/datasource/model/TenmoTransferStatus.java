@@ -1,10 +1,20 @@
 package com.techelevator.tenmo.datasource.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 // This model represents the structure and attributes of the data stored in the transfer_status table
 public class TenmoTransferStatus {
 
     // This TenmoTrasnferStatus.java class defines fields that correspond to the columns in the transfer_status table
+    @Positive(message = "Transfer Status ID cannot be negative.")
     private int transfer_status_id;
+    @NotBlank(message = "Status cannot be blank.")
     private String transfer_status_desc;
 
     // Constructor
