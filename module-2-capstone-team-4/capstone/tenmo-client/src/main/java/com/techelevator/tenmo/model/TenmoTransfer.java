@@ -9,8 +9,8 @@ import java.util.Objects;
 public class TenmoTransfer {
 
     // data base stores numeric value:    0  ,    1,       2,        3
-    public static enum TRANSFER_STATUS {NONE, PENDING, APPROVED, REJECTED}
-    public static enum TRANSFER_TYPE   {NONE, REQUEST, SEND}
+    public enum TRANSFER_STATUS {NONE, PENDING, APPROVED, REJECTED}
+    public enum TRANSFER_TYPE   {NONE, REQUEST, SEND}
 
     private Long            transferId;
     private TRANSFER_STATUS transferStatus;

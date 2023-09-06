@@ -243,7 +243,7 @@ If you look in `/src/main/java/com/techelevator/dao`, you'll see `JdbcUserDao`. 
 @Service
 public class JdbcUserDao implements UserDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

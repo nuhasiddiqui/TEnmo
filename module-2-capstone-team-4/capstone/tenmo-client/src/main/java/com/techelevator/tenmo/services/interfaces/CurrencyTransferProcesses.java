@@ -30,7 +30,7 @@ public interface CurrencyTransferProcesses {
      *
      * @return - the account for the id specified or null if no account
      */
-    public List<TenmoAccount>  getAnAccount(Long accountId);
+    List<TenmoAccount>  getAnAccount(Long accountId);
 
     void viewCurrentBalance(AuthenticatedUser currentUser);
 

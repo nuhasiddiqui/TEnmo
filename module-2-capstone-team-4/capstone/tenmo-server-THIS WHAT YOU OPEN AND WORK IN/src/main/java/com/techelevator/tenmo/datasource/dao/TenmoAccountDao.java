@@ -8,16 +8,16 @@ import java.util.List;
 
 public interface TenmoAccountDao {
 
-    public List<TenmoAccount> getAllAccounts();
+    List<TenmoAccount> getAllAccounts();
 
-    public TenmoAccount getAccountForAccountId(Long theAccountId);
+    TenmoAccount getAccountForAccountId(Long theAccountId);
 
-    public List<TenmoAccount> getAccountsForAUserId(int anUserId);
+    List<TenmoAccount> getAccountsForAUserId(int anUserId);
 
-    public TenmoAccount saveAccount(TenmoAccount tenmoAccount2Save);
+    TenmoAccount saveAccount(TenmoAccount tenmoAccount2Save);
 
-    public TenmoAccount updateAccount(TenmoAccount tenmoAccount2Update);
+    TenmoAccount updateAccount(TenmoAccount tenmoAccount2Update);
 
-    public BigDecimal getBalanceByAccountId(int AccountId);
+    BigDecimal getBalanceByAccountId(int AccountId);
 
 }

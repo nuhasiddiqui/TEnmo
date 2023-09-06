@@ -17,7 +17,7 @@ public class ConsoleService {
 
     private static final TenmoService theTenmoService = new TenmoService();
 
-    public  static enum MAIN_MENU_CHOICES {Exit
+    public enum MAIN_MENU_CHOICES {Exit
                                           ,View_Your_Current_Balance
                                           ,Send_TE_Bucks
                                           ,View_Your_Past_Transfers
@@ -100,7 +100,7 @@ public class ConsoleService {
     }
 
     public void printTransferDetails(TenmoTransfer aTransfer) {
-        System.out.printf("-".repeat(50) + "\nTransfers details\n"+"-".repeat(50)+"\n");
+        System.out.print("-".repeat(50) + "\nTransfers details\n"+"-".repeat(50)+"\n");
 
         User[] toUser   = theTenmoService.getUserForAccount(aTransfer.getToTenmoAccount());
         User[] fromUser = theTenmoService.getUserForAccount(aTransfer.getFromTenmoAccount());
@@ -127,7 +127,7 @@ public class ConsoleService {
                          , theUser.getUser().getId());
         System.out.printf("\n\tAccount #: %-10d", anAccount.getAccount_id());
         System.out.printf("\n\t  Balance: %-12.2f", anAccount.getBalance().doubleValue());
-        System.out.printf("\n" +"-".repeat(50) + "\n");
+        System.out.print("\n" +"-".repeat(50) + "\n");
     }
     /**
      * Issue custom prompt for confirmation
@@ -242,14 +242,14 @@ public class ConsoleService {
      * Display main processing menu choices
      */
     public void printMainMenu() {
-          MAIN_MENU_CHOICES menuChoices[] = MAIN_MENU_CHOICES.values();
+          MAIN_MENU_CHOICES[] menuChoices = MAIN_MENU_CHOICES.values();
 
           for(int i=1; i < menuChoices.length; i++){
               String aChoice = menuChoices[i].toString();
               aChoice = aChoice.replace("_"," ");
               System.out.println(menuChoices[i].ordinal() + " - " + aChoice);
           }
-          System.out.println(menuChoices[0].ordinal() + " - " + menuChoices[0].toString());
+          System.out.println(menuChoices[0].ordinal() + " - " + menuChoices[0]);
     }
     /**
      * Prompt for login credentials

@@ -34,7 +34,7 @@ public class App {
             mainMenu();                  // Display main processing menu/loop
             exitApp();                   // When done with main processing - perform exit processing
         }
-        return;                          // and return to caller (unnecessary, but included for clarity)
+        // and return to caller (unnecessary, but included for clarity)
     }
 
     /**
@@ -140,7 +140,7 @@ public class App {
                   break;                                           //    and exit switch statement
                 }
         }
-        return;  // not necessary, but coded for clarity
-        }
+        // not necessary, but coded for clarity
+    }
 	}
 

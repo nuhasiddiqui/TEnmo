@@ -25,7 +25,7 @@ public class TenmoService implements CurrencyTransferProcesses {
     private final String API_BASE_URL = "http://localhost:8080";
 
     // Instantiate a RestTemplate object to be used in calls to the API server
-    private RestTemplate theDataSourceApi = new RestTemplate();
+    private final RestTemplate theDataSourceApi = new RestTemplate();
 
     /**
      * Get all the accounts from the data source
@@ -35,7 +35,7 @@ public class TenmoService implements CurrencyTransferProcesses {
     @Override
     public List<TenmoAccount> getAllAccounts() {
         // Call Server API with path to retrieve all accounts from the datasource as an array
-        TenmoAccount allAccounts[] = theDataSourceApi.getForObject(API_BASE_URL + "/account", TenmoAccount[].class);
+        TenmoAccount[] allAccounts = theDataSourceApi.getForObject(API_BASE_URL + "/account", TenmoAccount[].class);
 
         // RestTemplate only returns an array, convert the array to a Java List object for return
         return Arrays.asList(allAccounts);
@@ -50,7 +50,7 @@ public class TenmoService implements CurrencyTransferProcesses {
     @Override
     public List<TenmoAccount> getAllAccountsForAUser(int userId) {
         // Call Server API with path and query parameter to retrieve all accounts for a given userid from the datasource as an array
-        TenmoAccount allAccounts4User[] = theDataSourceApi.getForObject(API_BASE_URL + "/account/?userid=" + userId, TenmoAccount[].class);
+        TenmoAccount[] allAccounts4User = theDataSourceApi.getForObject(API_BASE_URL + "/account/?userid=" + userId, TenmoAccount[].class);
 
         // RestTemplate only returns an array, convert the array to a Java List object for return
         return Arrays.asList(allAccounts4User);
@@ -68,7 +68,7 @@ public class TenmoService implements CurrencyTransferProcesses {
         TenmoAccount anAccount = theDataSourceApi.getForObject(API_BASE_URL + "/account/" + accountId, TenmoAccount.class);
 
         // RestTemplate only returns an array, convert the array to a Java List object for return
-        return Arrays.asList(anAccount);
+        return Collections.singletonList(anAccount);
     }
 
     @Override
@@ -303,7 +303,7 @@ private boolean updateAcctOnDataSource(TenmoAccount aTenmoAccount) {
 
     private List<TenmoTransfer> getUserTransfersFromDataSource(AuthenticatedUser currentUser) {
         // Call Server API with path and query parameter to retrieve all accounts for a given userid from the datasource as an array
-        TenmoTransfer allTransfers4User[] = theDataSourceApi.getForObject(API_BASE_URL + "/transfer/?id=" + currentUser.getUser().getId(), TenmoTransfer[].class);
+        TenmoTransfer[] allTransfers4User = theDataSourceApi.getForObject(API_BASE_URL + "/transfer/?id=" + currentUser.getUser().getId(), TenmoTransfer[].class);
 
         // RestTemplate only returns an array, convert the array to a Java List object for return
         return Arrays.asList(allTransfers4User);

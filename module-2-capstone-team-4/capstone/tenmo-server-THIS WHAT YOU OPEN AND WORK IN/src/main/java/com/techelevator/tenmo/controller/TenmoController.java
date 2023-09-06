@@ -20,9 +20,9 @@ import java.util.List;
 @RestController
 public class TenmoController {
 
-    private JdbcTenmoAccountDao tenmoAccountDao;
-    private JdbcTenmoTransferDao tenmoTransferDao;
-    private JdbcTenmoUserDao tenmoUserDao;
+    private final JdbcTenmoAccountDao tenmoAccountDao;
+    private final JdbcTenmoTransferDao tenmoTransferDao;
+    private final JdbcTenmoUserDao tenmoUserDao;
 
     // Constructor
     public TenmoController(JdbcTenmoAccountDao accountDao, JdbcTenmoTransferDao transferDao, JdbcTenmoUserDao userDao){
