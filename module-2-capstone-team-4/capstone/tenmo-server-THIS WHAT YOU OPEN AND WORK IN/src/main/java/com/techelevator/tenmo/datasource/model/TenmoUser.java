@@ -22,6 +22,10 @@ public class TenmoUser {
         this.created_at = created_at;
     }
 
+    public TenmoUser() {
+
+    }
+
     public int getUser_id() {
         return user_id;
     }

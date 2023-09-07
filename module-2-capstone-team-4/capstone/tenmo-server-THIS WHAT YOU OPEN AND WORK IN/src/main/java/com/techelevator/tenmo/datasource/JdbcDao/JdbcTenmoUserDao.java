@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.datasource.JdbcDao;
 
 import com.techelevator.tenmo.datasource.dao.TenmoUserDao;
+import com.techelevator.tenmo.datasource.model.TenmoAccount;
 import com.techelevator.tenmo.datasource.model.TenmoUser;
 import com.techelevator.tenmo.exception.DaoException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -56,13 +57,11 @@ public class JdbcTenmoUserDao implements TenmoUserDao {
 
     // Map a database row to a TenmoUser object
     private TenmoUser mapRowToTenmoUser(SqlRowSet results) {
-        int user_id = results.getInt("user_id");
-        String username = results.getString("username");
-        String password_hash = results.getString("password_hash");
-        String role = results.getString("role");
-        Timestamp created_at = results.getTimestamp("created_at");
+        TenmoUser user = new TenmoUser();
+        user.setUser_id(results.getInt("user_id"));
+        user.setUsername(results.getString("username"));
 
-        return new TenmoUser(user_id, username, password_hash, role, created_at);
+        return user;
     }
 
 }

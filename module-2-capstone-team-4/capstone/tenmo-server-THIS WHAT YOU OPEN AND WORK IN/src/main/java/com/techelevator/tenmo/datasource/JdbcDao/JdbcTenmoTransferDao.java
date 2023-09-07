@@ -79,15 +79,15 @@ public class JdbcTenmoTransferDao implements TenmoTransferDao {
         String sql = "SELECT t.*, " +
                 "       tt.transfer_type_desc, " +
                 "       ts.transfer_status_desc, " +
-                "       a.account_from, " +
-                "       a.account_to " +
+                "       t.account_from, " +
+                "       t.account_to " +
                 "FROM transfer t " +
                 "JOIN transfer_type tt ON t.transfer_type_id = tt.transfer_type_id " +
                 "JOIN transfer_status ts ON t.transfer_status_id = ts.transfer_status_id " +
                 "JOIN account a ON t.account_from = a.account_id " +
                 "JOIN tenmo_user tu ON a.user_id = tu.user_id " +
                 "WHERE a.user_id = ? " +
-                "ORDER BY account.user_id; ";
+                "ORDER BY a.user_id; ";
 
         try {
             // Execute the query and retrieve the transfer data
@@ -116,8 +116,8 @@ public class JdbcTenmoTransferDao implements TenmoTransferDao {
         String sql = "SELECT t.transfer_id, t.created_at " +
                 "       tt.transfer_type_desc, " +
                 "       ts.transfer_status_desc, " +
-                "       a.account_from, " +
-                "       a.account_to " +
+                "       t.account_from, " +
+                "       t.account_to " +
                 "FROM transfer t " +
                 "JOIN transfer_type tt ON t.transfer_type_id = tt.transfer_type_id " +
                 "JOIN transfer_status ts ON t.transfer_status_id = ts.transfer_status_id " +
@@ -142,13 +142,14 @@ public class JdbcTenmoTransferDao implements TenmoTransferDao {
 
     private TenmoTransfer mapRowToTransfer (SqlRowSet results) {
         TenmoTransfer transfer = new TenmoTransfer();
+        JdbcTenmoAccountDao account = new JdbcTenmoAccountDao(jdbcTemplate);
         transfer.setAmount(results.getBigDecimal("amount"));
         if (results.getTimestamp("created_at") != null) {
             transfer.setCreate(results.getTimestamp("created_at"));
         }
         transfer.setTransferId(results.getLong("transfer_id"));
-        transfer.setFromTenmoAccount(results.getObject("account_from", TenmoAccount.class));
-        transfer.setToTenmoAccount(results.getObject("account_to", TenmoAccount.class));
+        transfer.setFromTenmoAccount(account.getAccountForAccountId((long)(results.getInt("account_from"))));
+        transfer.setToTenmoAccount(account.getAccountForAccountId((long)(results.getInt("account_to"))));
         transfer.setAmount(results.getBigDecimal("amount"));
 
         // The Model (TenmoTransfer.java) initializes this fields as enums, the database stores them as numeric values
