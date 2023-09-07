@@ -21,13 +21,13 @@ public class JdbcTenmoTransferStatusDao implements TenmoTransferStatusDao {
 
     // Retrieves the transfer status description by its ID
     @Override
-    public String getTransferStatusById(int id) {
+    public String getTransferStatusById(int transferId) {
         String status = "";
         String sql = "SELECT transfer_status_desc FROM transfer_status WHERE transfer_status_id = ?";
 
         try {
             // Execute the query with a parameter and retrieve results
-            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
             if (results.next()) {
                 // Map the row to a TenmoTransferStatus object and get the description
                 status = mapRowToTenmoTransferStatus(results).getTransfer_status_desc();

@@ -80,7 +80,7 @@ public class JdbcTenmoAccountDao implements TenmoAccountDao {
         // TODONE: Given an account id, write a method to get a specific account from the data source
         // Construct the SQL query to select the account with the provided account ID
         TenmoAccount tenmoAccount = null;
-        String sql = "SELECT * FROM account WHERE account_id = ?";
+        String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?";
 
         try {
             // Execute the query and retrieve the account data
